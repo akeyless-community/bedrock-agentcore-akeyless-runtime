@@ -7,12 +7,13 @@ Settings applied to restrict changes so **people outside the Akeyless org must b
 | Control | Effect |
 |---------|--------|
 | **Branch protection on `main`** | No direct pushes; changes only via pull request |
-| **CODEOWNERS** (`@akeyless-community/cs-admin`) | PRs require approval from the maintainers team |
-| **Push restrictions** | Only `cs-admin` team members can merge/push to `main` |
+| **CODEOWNERS** (`@akeyless-community/cs-admin`) | PRs require approval from a `cs-admin` team member |
 | **CI required** | `ci-success` must pass before merge |
 | **Stale review dismissal** | New commits invalidate prior approvals |
 | **Last-push approval** | Re-approval required after new commits |
-| **`pypi` environment** | PyPI publish requires maintainer approval |
+| **`pypi` environment** | PyPI publish requires approval from a maintainer |
+
+> **Note:** Team-based *push restrictions* (limiting who can push to `main` to `cs-admin` only) require a **GitHub Team** plan. On the current **Free** org plan, outside contributors are blocked via **required PR + CODEOWNERS approval** instead of push restrictions.
 
 ## Files in this repo
 
@@ -68,11 +69,7 @@ gh api \
     "required_approving_review_count": 1,
     "require_last_push_approval": true
   },
-  "restrictions": {
-    "users": [],
-    "teams": ["cs-admin"],
-    "apps": []
-  },
+  "restrictions": null,
   "required_linear_history": true,
   "allow_force_pushes": false,
   "allow_deletions": false,
@@ -83,11 +80,13 @@ EOF
 
 ## PyPI environment
 
-The `pypi` environment should list `@akeyless-community/cs-admin` as **required reviewers**.
+The `pypi` environment requires approval from maintainers before packages upload to PyPI.
 
 **Repository** → **Settings** → **Environments** → **pypi** → **Required reviewers**
 
-Publishing a GitHub Release starts the workflow; a maintainer must approve the `pypi` environment deployment before packages upload.
+Currently configured: `baraka-akeyless`, `kgal-akl`, `Eyal-po` (members of `@akeyless-community/cs-admin`).
+
+Publishing a GitHub Release starts the workflow; one of these reviewers must approve the `pypi` environment deployment.
 
 ## External contributor flow
 
