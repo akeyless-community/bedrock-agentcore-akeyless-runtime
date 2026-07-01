@@ -9,6 +9,7 @@ Fetch [Akeyless](https://www.akeyless.io) secrets at **runtime** on [AWS Bedrock
 | Guide | Description |
 |-------|-------------|
 | **[Installation](docs/INSTALL.md)** | **pip install — no git clone required** |
+| [Publishing to PyPI](docs/PYPI_PUBLISHING.md) | Trusted publishing setup for maintainers |
 | [Akeyless setup](docs/AKEYLESS_SETUP.md) | Auth method, RBAC, secret paths — do this first |
 | [Deployment patterns](docs/DEPLOYMENT.md) | In-agent fetch, hybrid, MCP server, Gateway Lambda |
 | [Examples](examples/README.md) | Runnable sample agents |
@@ -30,11 +31,13 @@ AgentCore Runtime provides an IAM execution role with ambient AWS credentials. T
 
 **No git clone needed.** Add to your agent project and install with pip.
 
-### From PyPI (when published)
+### From PyPI (recommended once published)
 
 ```bash
 pip install akeyless-agentcore-runtime
 ```
+
+See [docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING.md) for maintainer setup. The package is not on PyPI yet — use GitHub install below until the first release is published.
 
 ### From GitHub (available now)
 

@@ -5,11 +5,14 @@ on:
     types: [published]
 
 permissions:
-  id-token: write
+  id-token: write   # Required for PyPI trusted publishing (OIDC)
+  contents: read    # Required when the repository is private
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Optional: uncomment after creating a "pypi" environment in GitHub repo settings
+    # environment: pypi
     steps:
       - uses: actions/checkout@v4
 

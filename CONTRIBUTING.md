@@ -36,8 +36,13 @@ pip install -e ".[all]"       # everything
 
 ### PyPI (recommended for end users)
 
-1. Configure [trusted publishing](https://docs.pypi.org/trusted-publishers/) on PyPI for this GitHub repo
-2. Create a GitHub Release (e.g. `v0.2.0`) — the `publish.yml` workflow uploads automatically
+See **[docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING.md)** for the full trusted-publishing walkthrough.
+
+Summary:
+
+1. Add a **pending publisher** on PyPI (`akeyless-community` / `bedrock-agentcore-akeyless-runtime` / `publish.yml`)
+2. *(Recommended)* Make the repo **public** — not required for PyPI, but required for `pip install` from GitHub without credentials
+3. Publish a **GitHub Release** (e.g. `v0.2.0`) — the workflow uploads automatically
 
 Manual fallback:
 
