@@ -1,0 +1,9 @@
+# Akeyless runtime (cloud identity auth + secret fetch)
+akeyless-agentcore-runtime>=0.2.0
+
+# Bedrock AgentCore
+bedrock-agentcore>=0.1.0
+
+# Example agent framework
+strands-agents>=0.1.0
+openai>=1.0.0

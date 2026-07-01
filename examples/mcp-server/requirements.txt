@@ -1,0 +1,1 @@
+akeyless-agentcore-runtime[mcp]>=0.2.0
