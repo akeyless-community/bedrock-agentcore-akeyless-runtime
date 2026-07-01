@@ -83,7 +83,13 @@ gh api \
 EOF
 ```
 
-If the API returns an error applying `restrictions` (unexpected for a public org repo), capture the exact error in an issue rather than silently omitting the layer.
+If the API returns an error applying `restrictions`, or succeeds but `restrictions.teams` is still empty when you verify with:
+
+```bash
+gh api repos/akeyless-community/bedrock-agentcore-akeyless-runtime/branches/main/protection/restrictions/teams
+```
+
+set **Restrict who can push to matching branches** to `@akeyless-community/cs-admin` in **Settings → Branches → `main` → Edit** instead of silently omitting the layer.
 
 ## PyPI environment
 
