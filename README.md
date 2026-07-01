@@ -8,6 +8,7 @@ Fetch [Akeyless](https://www.akeyless.io) secrets at **runtime** on [AWS Bedrock
 
 | Guide | Description |
 |-------|-------------|
+| **[Installation](docs/INSTALL.md)** | **pip install — no git clone required** |
 | [Akeyless setup](docs/AKEYLESS_SETUP.md) | Auth method, RBAC, secret paths — do this first |
 | [Deployment patterns](docs/DEPLOYMENT.md) | In-agent fetch, hybrid, MCP server, Gateway Lambda |
 | [Examples](examples/README.md) | Runnable sample agents |
@@ -27,17 +28,36 @@ AgentCore Runtime provides an IAM execution role with ambient AWS credentials. T
 
 ## Install
 
+**No git clone needed.** Add to your agent project and install with pip.
+
+### From PyPI (when published)
+
 ```bash
 pip install akeyless-agentcore-runtime
 ```
 
+### From GitHub (available now)
+
+```bash
+pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+```
+
+Add to your AgentCore `requirements.txt`:
+
+```text
+akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0
+bedrock-agentcore>=0.1.0
+```
+
+Full install guide (extras, MCP CLI, verification): **[docs/INSTALL.md](docs/INSTALL.md)**
+
 Optional extras:
 
 ```bash
-pip install 'akeyless-agentcore-runtime[strands]'   # in-process Strands tools
-pip install 'akeyless-agentcore-runtime[mcp]'       # MCP server for AgentCore Runtime
-pip install 'akeyless-agentcore-runtime[gateway]'   # AgentCore Gateway Lambda setup
-pip install 'akeyless-agentcore-runtime[all]'       # everything
+pip install "akeyless-agentcore-runtime[strands] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime[mcp] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime[gateway] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime[all] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
 ```
 
 Requires **Python 3.10+**.

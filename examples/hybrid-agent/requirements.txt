@@ -1,4 +1,4 @@
-akeyless-agentcore-runtime[strands]>=0.2.0
+akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0
 bedrock-agentcore>=0.1.0
 strands-agents>=0.1.0
 openai>=1.0.0

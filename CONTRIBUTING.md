@@ -34,7 +34,15 @@ pip install -e ".[all]"       # everything
 
 ## Publishing (maintainers)
 
+### PyPI (recommended for end users)
+
+1. Configure [trusted publishing](https://docs.pypi.org/trusted-publishers/) on PyPI for this GitHub repo
+2. Create a GitHub Release (e.g. `v0.2.0`) — the `publish.yml` workflow uploads automatically
+
+Manual fallback:
+
 ```bash
+pip install build twine
 python -m build
 twine upload dist/*
 ```

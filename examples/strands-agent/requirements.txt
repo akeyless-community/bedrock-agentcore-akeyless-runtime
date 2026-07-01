@@ -1,5 +1,5 @@
-# Akeyless runtime (cloud identity auth + secret fetch)
-akeyless-agentcore-runtime>=0.2.0
+# Akeyless runtime — install without cloning the repo
+akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0
 
 # Bedrock AgentCore
 bedrock-agentcore>=0.1.0
