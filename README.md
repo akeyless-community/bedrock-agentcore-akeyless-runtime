@@ -14,6 +14,7 @@ Fetch [Akeyless](https://www.akeyless.io) secrets at **runtime** on [AWS Bedrock
 | [Deployment patterns](docs/DEPLOYMENT.md) | In-agent fetch, hybrid, MCP server, Gateway Lambda |
 | [Examples](examples/README.md) | Runnable sample agents |
 | [Security](SECURITY.md) | Production checklist and reporting |
+| [Maintainer guide](docs/MAINTAINER.md) | Branch protection, approvals, PyPI environment |
 | [Contributing](CONTRIBUTING.md) | Development setup and PR guidelines |
 
 ## Why this integration?

@@ -26,11 +26,20 @@ pip install -e ".[all]"       # everything
 
 ## Pull requests
 
-1. Fork and create a feature branch from `main`.
-2. Add or update tests for behavior changes.
-3. Run `pytest` before opening the PR.
-4. Do not commit real credentials, `.env` files, or gateway tokens.
-5. Keep changes focused — this package should stay small and dependency-light.
+**All changes to `main` require review and approval from `@akeyless-community/cs-admin`.**
+
+External contributors (outside the Akeyless org):
+
+1. **Fork** the repository — do not request write access unless you are a maintainer.
+2. Create a feature branch from `main`.
+3. Add or update tests for behavior changes.
+4. Run `pytest` before opening the PR.
+5. Open a pull request using the provided template.
+6. Wait for **CI** (`ci-success`) and a **maintainer approval** before merge.
+
+Maintainers merge after approval. Direct pushes to `main` are not allowed.
+
+See [docs/MAINTAINER.md](docs/MAINTAINER.md) for branch protection and org settings.
 
 ## Publishing (maintainers)
 

@@ -11,8 +11,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    # Optional: uncomment after creating a "pypi" environment in GitHub repo settings
-    # environment: pypi
+    environment: pypi
     steps:
       - uses: actions/checkout@v4
 
