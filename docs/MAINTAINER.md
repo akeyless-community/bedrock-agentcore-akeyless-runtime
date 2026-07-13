@@ -7,13 +7,14 @@ Settings applied to restrict changes so **people outside the Akeyless org must b
 | Control | Effect |
 |---------|--------|
 | **Branch protection on `main`** | No direct pushes; changes only via pull request |
+| **Push restrictions** | Only `@akeyless-community/cs-admin` can push or merge to `main` |
 | **CODEOWNERS** (`@akeyless-community/cs-admin`) | PRs require approval from a `cs-admin` team member |
 | **CI required** | `ci-success` must pass before merge |
 | **Stale review dismissal** | New commits invalidate prior approvals |
 | **Last-push approval** | Re-approval required after new commits |
 | **`pypi` environment** | PyPI publish requires approval from a maintainer |
 
-> **Note:** Team-based *push restrictions* (limiting who can push to `main` to `cs-admin` only) require a **GitHub Team** plan. On the current **Free** org plan, outside contributors are blocked via **required PR + CODEOWNERS approval** instead of push restrictions.
+> **Note:** For *private* repositories, team-based push restrictions require a **GitHub Team** plan. This repo is **public**, so push restrictions are available on **GitHub Free for organizations** and limit merge/push to `main` to `cs-admin`. Required PR + CODEOWNERS approval is an independent second layer — external fork contributors are blocked by PR review regardless of push restrictions.
 
 ## Files in this repo
 
@@ -69,7 +70,11 @@ gh api \
     "required_approving_review_count": 1,
     "require_last_push_approval": true
   },
-  "restrictions": null,
+  "restrictions": {
+    "users": [],
+    "teams": ["cs-admin"],
+    "apps": []
+  },
   "required_linear_history": true,
   "allow_force_pushes": false,
   "allow_deletions": false,
@@ -78,15 +83,23 @@ gh api \
 EOF
 ```
 
+If the API returns an error applying `restrictions`, or succeeds but `restrictions.teams` is still empty when you verify with:
+
+```bash
+gh api repos/akeyless-community/bedrock-agentcore-akeyless-runtime/branches/main/protection/restrictions/teams
+```
+
+set **Restrict who can push to matching branches** to `@akeyless-community/cs-admin` in **Settings → Branches → `main` → Edit** instead of silently omitting the layer.
+
 ## PyPI environment
 
 The `pypi` environment requires approval from maintainers before packages upload to PyPI.
 
 **Repository** → **Settings** → **Environments** → **pypi** → **Required reviewers**
 
-Currently configured: `baraka-akeyless`, `kgal-akl`, `Eyal-po` (members of `@akeyless-community/cs-admin`).
+Configure reviewers from `@akeyless-community/cs-admin`. Verify the current list in the environment settings UI — do not rely on a hardcoded name list in this doc.
 
-Publishing a GitHub Release starts the workflow; one of these reviewers must approve the `pypi` environment deployment.
+Publishing a GitHub Release starts the workflow; an configured reviewer must approve the `pypi` environment deployment.
 
 ## External contributor flow
 
