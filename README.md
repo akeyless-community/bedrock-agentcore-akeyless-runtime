@@ -34,7 +34,7 @@ AgentCore Runtime provides an IAM execution role with ambient AWS credentials. T
 
 **No git clone needed.** Add to your agent project and install with pip.
 
-### From PyPI (recommended once published)
+### From PyPI (recommended)
 
 ```bash
 pip install akeyless-agentcore-runtime
