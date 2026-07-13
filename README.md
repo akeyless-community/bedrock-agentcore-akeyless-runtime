@@ -2,6 +2,8 @@
 
 Fetch [Akeyless](https://www.akeyless.io) secrets at **runtime** on [AWS Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/). Authenticate with **cloud identity** (AWS IAM) — no long-lived API keys in your agent deployment. Application secrets stay in Akeyless, not AWS Secrets Manager.
 
+Built on the [Akeyless Python SDK](https://pypi.org/project/akeyless/) with AgentCore-specific auth, path conventions, caching, and optional MCP tools.
+
 **Repository:** [github.com/akeyless-community/bedrock-agentcore-akeyless-runtime](https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime)
 
 ## Documentation
@@ -43,26 +45,17 @@ See [docs/PYPI_PUBLISHING.md](docs/PYPI_PUBLISHING.md) for maintainer setup. The
 ### From GitHub (available now)
 
 ```bash
-pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0"
 ```
 
 Add to your AgentCore `requirements.txt`:
 
 ```text
-akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0
+akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0
 bedrock-agentcore>=0.1.0
 ```
 
 Full install guide (extras, MCP CLI, verification): **[docs/INSTALL.md](docs/INSTALL.md)**
-
-Optional extras:
-
-```bash
-pip install "akeyless-agentcore-runtime[strands] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
-pip install "akeyless-agentcore-runtime[mcp] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
-pip install "akeyless-agentcore-runtime[gateway] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
-pip install "akeyless-agentcore-runtime[all] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
-```
 
 Requires **Python 3.10+**.
 
@@ -70,13 +63,7 @@ Requires **Python 3.10+**.
 
 ### 1. Configure Akeyless
 
-Follow the full guide: **[docs/AKEYLESS_SETUP.md](docs/AKEYLESS_SETUP.md)**
-
-Summary:
-
-1. Create an **AWS IAM Auth Method** bound to your AgentCore execution role ARN
-2. Grant read/list on `/bedrock-agentcore/<agent>/<env>/*`
-3. Store secrets in Akeyless (not in AgentCore env vars)
+Follow **[docs/AKEYLESS_SETUP.md](docs/AKEYLESS_SETUP.md)** — create an AWS IAM Auth Method, RBAC, and store secrets under `/bedrock-agentcore/<agent>/<env>/`.
 
 ### 2. Set bootstrap env vars on AgentCore
 
@@ -88,70 +75,57 @@ Configure only auth + path prefix — **not** application secrets:
 | `AKEYLESS_ACCESS_TYPE` | No (default: `aws_iam`) | `aws_iam` |
 | `AKEYLESS_SECRET_PREFIX` | Recommended | `/bedrock-agentcore/my-agent/production` |
 | `AKEYLESS_GATEWAY_URL` | No | `https://api.akeyless.io` |
-| `AGENTCORE_AGENT_NAME` | No | `my-agent` |
 
 ### 3. Fetch a secret in your agent
 
 ```python
-from akeyless_agentcore import get_secret_sync
+from akeyless_agentcore import get_secret
 
-api_key = get_secret_sync("OPENAI_API_KEY")
+api_key = get_secret("OPENAI_API_KEY")
 ```
+
+Works in both sync scripts and `async def` AgentCore handlers — it calls the Akeyless SDK directly (blocking HTTP, cached between invocations).
 
 ### 4. Deploy
 
 ```bash
-pip install akeyless-agentcore-runtime bedrock-agentcore
 agentcore deploy
 ```
 
 See [examples/strands-agent/](examples/strands-agent/) for a complete agent.
 
-## In-agent fetch vs AgentCore tools
+## Two ways to retrieve secrets
 
-Use **both** in production — they solve different problems:
+| API | Who calls it | Purpose |
+|-----|--------------|---------|
+| **`get_secret()`** | Your Python code | Bootstrap secrets (e.g. model API key at startup) |
+| **`get_akeyless_secret`** (tool) | The LLM agent | On-demand secrets via Strands / MCP / Gateway |
 
-| Pattern | When to use | Example |
-|---------|-------------|---------|
-| **In-agent fetch** | Bootstrap secrets on every invocation; no tool-call overhead | Model API key at cold start |
-| **AgentCore tools** | Agent decides which secret to fetch; shared across agents | `get_akeyless_secret("DATABASE_URL")` on demand |
-| **Hybrid (recommended)** | Bootstrap + on-demand | [examples/hybrid-agent/](examples/hybrid-agent/) |
+Both use the same Akeyless SDK under the hood (`auth` + `get_secret_value`). The tool adds a JSON response layer for agent frameworks.
 
 ```python
-from akeyless_agentcore import get_secret_sync
+from akeyless_agentcore import get_secret
 from akeyless_agentcore.tools.strands import create_strands_tools
 
-api_key = get_secret_sync("OPENAI_API_KEY")          # bootstrap
-agent = Agent(model=model, tools=create_strands_tools())  # on-demand
+api_key = get_secret("OPENAI_API_KEY")              # you call this
+agent = Agent(model=model, tools=create_strands_tools())  # agent calls get_akeyless_secret
 ```
 
-### Tool deployment options
-
-| Deployment | Install extra | Use case |
-|------------|---------------|----------|
-| In-process Strands tools | `[strands]` | Tools in the same agent process |
-| MCP server on AgentCore Runtime | `[mcp]` | Dedicated secrets MCP endpoint |
-| Gateway Lambda target | `[gateway]` | Shared tools via AgentCore Gateway |
-
-| Tool | Returns values? | Description |
-|------|----------------|-------------|
-| `list_akeyless_secrets` | No | Discover secret names under a prefix |
-| `get_akeyless_secret` | Yes | Fetch static, dynamic, or rotated secret |
+Recommended production pattern: **both** — see [examples/hybrid-agent/](examples/hybrid-agent/).
 
 Full details: **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**
 
 ## API reference
 
-### Convenience functions
+### `get_secret(name)` — fetch a secret from your code
 
 ```python
-from akeyless_agentcore import get_secret_sync, get_secret
+from akeyless_agentcore import get_secret
 
-api_key = get_secret_sync("OPENAI_API_KEY")
-api_key = await get_secret("OPENAI_API_KEY")  # async
+api_key = get_secret("OPENAI_API_KEY")
 ```
 
-### Client
+### `AkeylessRuntimeClient` — full client
 
 ```python
 from akeyless_agentcore import AkeylessRuntimeClient
@@ -163,11 +137,18 @@ client = AkeylessRuntimeClient(
     access_type="aws_iam",
 )
 
-client.get_secret_sync("OPENAI_API_KEY")
-client.get_secret_json_sync("APP_CONFIG")
-client.get_dynamic_secret_sync("aws-creds")
-client.get_rotated_secret_sync("api-key")
-client.list_secrets_sync()
+client.get_secret("OPENAI_API_KEY")
+client.get_secret_json("APP_CONFIG")
+client.get_dynamic_secret("aws-creds")
+client.get_rotated_secret("api-key")
+client.list_secrets()
+```
+
+### Agent tools — `get_akeyless_secret` / `list_akeyless_secrets`
+
+```python
+from akeyless_agentcore.tools.strands import create_strands_tools
+# or: pip install 'akeyless-agentcore-runtime[mcp]' for MCP server
 ```
 
 ## Authentication
@@ -190,7 +171,7 @@ sequenceDiagram
     participant AWS as AWS STS/IAM
     participant AKL as Akeyless Gateway
 
-    Agent->>Lib: get_secret_sync("OPENAI_API_KEY")
+    Agent->>Lib: get_secret("OPENAI_API_KEY")
     Lib->>AWS: Generate cloud ID (SigV4 GetCallerIdentity)
     AWS-->>Lib: Signed identity proof
     Lib->>AKL: POST /auth (access_id, aws_iam, cloud_id)
@@ -203,14 +184,12 @@ sequenceDiagram
 ## Local development
 
 ```bash
-cp .env.example .env   # edit with your test credentials — never commit .env
-
 export AKEYLESS_ACCESS_ID=p-xxxxx
 export AKEYLESS_ACCESS_TYPE=access_key
 export AKEYLESS_ACCESS_KEY=your-readonly-key
 export AKEYLESS_SECRET_PREFIX=/bedrock-agentcore/my-agent/dev
 
-python3 -c "from akeyless_agentcore import get_secret_sync; print(get_secret_sync('OPENAI_API_KEY')[:8] + '...')"
+python3 -c "from akeyless_agentcore import get_secret; print(get_secret('OPENAI_API_KEY')[:8] + '...')"
 ```
 
 ## Related community projects

@@ -107,24 +107,7 @@ class AkeylessRuntimeClient:
         self._session = authenticate(self._api, self._config)
         return self._session.token
 
-    async def get_secret_at_path(
-        self,
-        path: str,
-        *,
-        version: int | None = None,
-        json: bool = False,
-        ignore_cache: bool = False,
-        allow_dynamic_fallback: bool = False,
-    ) -> str:
-        return self.get_secret_at_path_sync(
-            path,
-            version=version,
-            json=json,
-            ignore_cache=ignore_cache,
-            allow_dynamic_fallback=allow_dynamic_fallback,
-        )
-
-    def get_secret_at_path_sync(
+    def get_secret_at_path(
         self,
         path: str,
         *,
@@ -157,27 +140,20 @@ class AkeylessRuntimeClient:
             return value
         except Exception as error:
             if allow_dynamic_fallback and _is_not_found_error(error):
-                return self.get_dynamic_secret_at_path_sync(
+                return self.get_dynamic_secret_at_path(
                     resolved,
                     ignore_cache=ignore_cache,
                 )
             raise
 
-    async def get_secret(
-        self,
-        name: str,
-        options: GetSecretOptions | None = None,
-    ) -> str:
-        return self.get_secret_sync(name, options)
-
-    def get_secret_sync(
+    def get_secret(
         self,
         name: str,
         options: GetSecretOptions | None = None,
     ) -> str:
         opts = options or GetSecretOptions()
         path = opts.path or self.resolve_path(name)
-        return self.get_secret_at_path_sync(
+        return self.get_secret_at_path(
             path,
             version=opts.version,
             json=opts.json,
@@ -185,25 +161,18 @@ class AkeylessRuntimeClient:
             allow_dynamic_fallback=opts.allow_dynamic_fallback,
         )
 
-    def get_secret_json_sync(
+    def get_secret_json(
         self,
         name: str,
         options: GetSecretOptions | None = None,
     ) -> dict[str, Any]:
-        raw = self.get_secret_sync(name, options)
+        raw = self.get_secret(name, options)
         data = json.loads(raw)
         if not isinstance(data, dict):
             raise ValueError(f"Secret {name!r} is not a JSON object")
         return data
 
-    async def get_dynamic_secret_at_path(
-        self,
-        path: str,
-        options: DynamicSecretOptions | None = None,
-    ) -> str:
-        return self.get_dynamic_secret_at_path_sync(path, options)
-
-    def get_dynamic_secret_at_path_sync(
+    def get_dynamic_secret_at_path(
         self,
         path: str,
         options: DynamicSecretOptions | None = None,
@@ -249,30 +218,16 @@ class AkeylessRuntimeClient:
             self._write_cached(resolved, "dynamic", value)
         return value
 
-    async def get_dynamic_secret(
-        self,
-        name: str,
-        options: DynamicSecretOptions | None = None,
-    ) -> str:
-        return self.get_dynamic_secret_sync(name, options)
-
-    def get_dynamic_secret_sync(
+    def get_dynamic_secret(
         self,
         name: str,
         options: DynamicSecretOptions | None = None,
     ) -> str:
         opts = options or DynamicSecretOptions()
         path = opts.path or self.resolve_path(name)
-        return self.get_dynamic_secret_at_path_sync(path, opts)
+        return self.get_dynamic_secret_at_path(path, opts)
 
-    async def get_rotated_secret_at_path(
-        self,
-        path: str,
-        options: RotatedSecretOptions | None = None,
-    ) -> str:
-        return self.get_rotated_secret_at_path_sync(path, options)
-
-    def get_rotated_secret_at_path_sync(
+    def get_rotated_secret_at_path(
         self,
         path: str,
         options: RotatedSecretOptions | None = None,
@@ -299,23 +254,16 @@ class AkeylessRuntimeClient:
         self._write_cached(resolved, "rotated", value)
         return value
 
-    async def get_rotated_secret(
-        self,
-        name: str,
-        options: RotatedSecretOptions | None = None,
-    ) -> str:
-        return self.get_rotated_secret_sync(name, options)
-
-    def get_rotated_secret_sync(
+    def get_rotated_secret(
         self,
         name: str,
         options: RotatedSecretOptions | None = None,
     ) -> str:
         opts = options or RotatedSecretOptions()
         path = opts.path or self.resolve_path(name)
-        return self.get_rotated_secret_at_path_sync(path, opts)
+        return self.get_rotated_secret_at_path(path, opts)
 
-    def list_secrets_sync(self, prefix: str | None = None) -> list[str]:
+    def list_secrets(self, prefix: str | None = None) -> list[str]:
         """List secret names under a prefix. Returns paths only, never values."""
         resolved = normalize_path(prefix or self._config.secret_prefix)
         token = self._get_token()
@@ -355,9 +303,5 @@ def reset_default_client() -> None:
     _default_client = None
 
 
-async def get_secret(name: str, options: GetSecretOptions | None = None) -> str:
-    return await get_default_client().get_secret(name, options)
-
-
-def get_secret_sync(name: str, options: GetSecretOptions | None = None) -> str:
-    return get_default_client().get_secret_sync(name, options)
+def get_secret(name: str, options: GetSecretOptions | None = None) -> str:
+    return get_default_client().get_secret(name, options)

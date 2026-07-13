@@ -16,17 +16,17 @@ class FakeClient:
     def resolve_path(self, name: str) -> str:
         return f"/bedrock-agentcore/demo/production/{name}"
 
-    def list_secrets_sync(self, prefix: str | None = None) -> list[str]:
+    def list_secrets(self, prefix: str | None = None) -> list[str]:
         base = prefix or self.config.secret_prefix
         return [f"{base}/OPENAI_API_KEY", f"{base}/DATABASE_URL"]
 
-    def get_secret_sync(self, name: str, options=None) -> str:
+    def get_secret(self, name: str, options=None) -> str:
         return f"static-value-for-{name}"
 
-    def get_dynamic_secret_sync(self, name: str, **kwargs) -> str:
+    def get_dynamic_secret(self, name: str, options=None) -> str:
         return f"dynamic-value-for-{name}"
 
-    def get_rotated_secret_sync(self, name: str, **kwargs) -> str:
+    def get_rotated_secret(self, name: str, options=None) -> str:
         return f"rotated-value-for-{name}"
 
 
@@ -53,10 +53,10 @@ class TestSecretToolService:
     def test_get_json_key(self):
         client = FakeClient()
 
-        def get_secret_sync(name: str, options=None) -> str:
+        def get_secret(name: str, options=None) -> str:
             return '{"OPENAI_API_KEY": "sk-test", "ORG": "acme"}'
 
-        client.get_secret_sync = get_secret_sync  # type: ignore[method-assign]
+        client.get_secret = get_secret  # type: ignore[method-assign]
         service = SecretToolService(client=client)  # type: ignore[arg-type]
         result = service.get_secret("OPENAI_API_KEY", json_key="OPENAI_API_KEY")
         assert result.ok is True
@@ -64,7 +64,7 @@ class TestSecretToolService:
 
     def test_missing_json_key(self):
         client = FakeClient()
-        client.get_secret_sync = lambda name, options=None: '{"other": "x"}'  # type: ignore[method-assign]
+        client.get_secret = lambda name, options=None: '{"other": "x"}'  # type: ignore[method-assign]
         service = SecretToolService(client=client)  # type: ignore[arg-type]
         result = service.get_secret("cfg", json_key="missing")
         assert result.ok is False

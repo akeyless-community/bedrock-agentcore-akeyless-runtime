@@ -12,7 +12,7 @@ This guide covers the three ways to use `akeyless-agentcore-runtime` on AWS Bedr
 │  │                                                          │   │
 │  │  ┌─────────────────┐    ┌──────────────────────────┐  │   │
 │  │  │ In-agent fetch  │    │ Strands tools (optional) │  │   │
-│  │  │ get_secret_sync │    │ create_strands_tools()   │  │   │
+│  │  │ get_secret      │    │ create_strands_tools()   │  │   │
 │  │  └────────┬────────┘    └────────────┬─────────────┘  │   │
 │  │           │                          │                 │   │
 │  │           └──────────┬───────────────┘                 │   │
@@ -50,7 +50,7 @@ agentcore deploy
 Add to `requirements.txt`:
 
 ```
-akeyless-agentcore-runtime>=0.2.0
+akeyless-agentcore-runtime>=0.3.0
 bedrock-agentcore>=0.1.0
 ```
 
@@ -66,7 +66,7 @@ pip install -r requirements.txt
 agentcore deploy
 ```
 
-- `OPENAI_API_KEY` loaded via `get_secret_sync()` at startup
+- `OPENAI_API_KEY` loaded via `get_secret()` at startup
 - Other secrets available via `list_akeyless_secrets` / `get_akeyless_secret` tools
 
 ## Pattern 3: MCP server on AgentCore Runtime

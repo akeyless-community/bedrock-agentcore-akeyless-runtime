@@ -86,24 +86,24 @@ Publishing is triggered by publishing a release (not just pushing a tag).
 
 1. Go to [Releases](https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime/releases)
 2. **Draft a new release**
-3. Choose tag `v0.2.0` (or create a new tag matching `version` in `pyproject.toml`)
-4. Title: `v0.2.0`
+3. Choose tag `v0.3.0` (or create a new tag matching `version` in `pyproject.toml`)
+4. Title: `v0.3.0`
 5. **Publish release**
 
 ### Option B: CLI
 
 ```bash
-gh release create v0.2.0 \
+gh release create v0.3.0 \
   --repo akeyless-community/bedrock-agentcore-akeyless-runtime \
-  --title "v0.2.0" \
+  --title "v0.3.0" \
   --notes "Initial PyPI release"
 ```
 
 ### Version checklist before release
 
-1. Bump `version` in `pyproject.toml` (currently `0.2.0`)
+1. Bump `version` in `pyproject.toml` (currently `0.3.0`)
 2. Commit and push to `main`
-3. Create tag matching the version: `v0.2.0`
+3. Create tag matching the version: `v0.3.0`
 4. Publish the release
 
 ---
@@ -152,7 +152,7 @@ pip install akeyless-agentcore-runtime
 Keep the GitHub URL as a fallback for pinning pre-release commits:
 
 ```bash
-pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0"
 ```
 
 ---

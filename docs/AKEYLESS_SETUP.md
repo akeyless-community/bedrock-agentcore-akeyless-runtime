@@ -66,7 +66,7 @@ Create static secrets under your prefix:
 }
 ```
 
-Use `get_secret_json_sync("APP_CONFIG")` or `get_akeyless_secret(..., json_key="DATABASE_URL")` to read individual fields.
+Use `get_secret_json("APP_CONFIG")` or `get_akeyless_secret(..., json_key="DATABASE_URL")` to read individual fields.
 
 ## 4. Configure AgentCore environment variables
 
@@ -98,8 +98,8 @@ export AKEYLESS_ACCESS_TYPE=access_key
 export AKEYLESS_ACCESS_KEY=your-readonly-key
 
 python3 -c "
-from akeyless_agentcore import get_secret_sync
-print('OK:', get_secret_sync('OPENAI_API_KEY')[:6] + '...')
+from akeyless_agentcore import get_secret
+print('OK:', get_secret('OPENAI_API_KEY')[:6] + '...')
 "
 ```
 
@@ -122,7 +122,7 @@ For dynamic secrets (e.g. temporary AWS credentials):
 from akeyless_agentcore import AkeylessRuntimeClient
 
 client = AkeylessRuntimeClient()
-creds = client.get_dynamic_secret_sync("aws-dynamic-secret")
+creds = client.get_dynamic_secret("aws-dynamic-secret")
 ```
 
 Or via tool:
@@ -131,4 +131,4 @@ Or via tool:
 get_akeyless_secret(name="aws-dynamic-secret", secret_type="dynamic")
 ```
 
-For rotated secrets, use `secret_type="rotated"` or `client.get_rotated_secret_sync(...)`.
+For rotated secrets, use `secret_type="rotated"` or `client.get_rotated_secret(...)`.

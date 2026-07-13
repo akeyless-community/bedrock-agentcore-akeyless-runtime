@@ -6,7 +6,7 @@ import json
 from dataclasses import dataclass
 from typing import Any, Literal
 
-from akeyless_agentcore.client import AkeylessRuntimeClient, GetSecretOptions
+from akeyless_agentcore.client import AkeylessRuntimeClient, DynamicSecretOptions, GetSecretOptions, RotatedSecretOptions
 
 SecretType = Literal["static", "dynamic", "rotated"]
 
@@ -37,7 +37,7 @@ class SecretToolService:
     def list_secrets(self, prefix: str | None = None) -> ToolResponse:
         """List secret names under a prefix. Never returns secret values."""
         try:
-            names = self._client.list_secrets_sync(prefix=prefix)
+            names = self._client.list_secrets(prefix=prefix)
             return ToolResponse(
                 ok=True,
                 data={
@@ -100,19 +100,17 @@ class SecretToolService:
         ignore_cache: bool,
     ) -> str:
         if secret_type == "dynamic":
-            return self._client.get_dynamic_secret_sync(
+            return self._client.get_dynamic_secret(
                 name,
-                path=path,
-                ignore_cache=ignore_cache,
+                DynamicSecretOptions(path=path, ignore_cache=ignore_cache),
             )
         if secret_type == "rotated":
-            return self._client.get_rotated_secret_sync(
+            return self._client.get_rotated_secret(
                 name,
-                path=path,
-                ignore_cache=ignore_cache,
+                RotatedSecretOptions(path=path, ignore_cache=ignore_cache),
             )
 
-        return self._client.get_secret_sync(
+        return self._client.get_secret(
             name,
             GetSecretOptions(
                 path=path,
