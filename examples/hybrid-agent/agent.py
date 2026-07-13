@@ -17,7 +17,7 @@ from bedrock_agentcore import BedrockAgentCoreApp
 from strands import Agent
 from strands.models.openai import OpenAIModel
 
-from akeyless_agentcore import get_secret_sync
+from akeyless_agentcore import get_secret
 from akeyless_agentcore.tools.strands import create_strands_tools
 
 app = BedrockAgentCoreApp()
@@ -25,7 +25,7 @@ app = BedrockAgentCoreApp()
 
 def _bootstrap_openai_key() -> str:
     """In-agent fetch: model credentials loaded once at cold start."""
-    raw = get_secret_sync("OPENAI_API_KEY")
+    raw = get_secret("OPENAI_API_KEY")
     try:
         data = json.loads(raw)
         if isinstance(data, dict) and data.get("OPENAI_API_KEY"):

@@ -22,14 +22,14 @@ from bedrock_agentcore import BedrockAgentCoreApp
 from strands import Agent
 from strands.models.openai import OpenAIModel
 
-from akeyless_agentcore import get_secret_sync
+from akeyless_agentcore import get_secret
 
 app = BedrockAgentCoreApp()
 
 
 def _load_openai_api_key() -> str:
     """Fetch the OpenAI API key from Akeyless using the runtime's AWS IAM role."""
-    raw = get_secret_sync("OPENAI_API_KEY")
+    raw = get_secret("OPENAI_API_KEY")
     # Support plain string or JSON {"OPENAI_API_KEY": "sk-..."}
     try:
         data = json.loads(raw)

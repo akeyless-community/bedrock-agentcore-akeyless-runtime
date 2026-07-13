@@ -1,1 +1,1 @@
-akeyless-agentcore-runtime[mcp] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0
+akeyless-agentcore-runtime[mcp] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0

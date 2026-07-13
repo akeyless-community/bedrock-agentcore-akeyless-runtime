@@ -2,16 +2,20 @@
 
 from akeyless_agentcore.client import (
     AkeylessRuntimeClient,
+    DynamicSecretOptions,
+    GetSecretOptions,
+    RotatedSecretOptions,
     get_default_client,
     get_secret,
-    get_secret_sync,
 )
 
 __all__ = [
     "AkeylessRuntimeClient",
+    "DynamicSecretOptions",
+    "GetSecretOptions",
+    "RotatedSecretOptions",
     "get_default_client",
     "get_secret",
-    "get_secret_sync",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"

@@ -22,7 +22,7 @@ pip install 'akeyless-agentcore-runtime[all]'
 In your agent's `requirements.txt`:
 
 ```text
-akeyless-agentcore-runtime>=0.2.0
+akeyless-agentcore-runtime>=0.3.0
 bedrock-agentcore>=0.1.0
 ```
 
@@ -39,20 +39,20 @@ pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-commun
 Pin to a release tag for reproducible builds:
 
 ```bash
-pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0"
 ```
 
 With extras:
 
 ```bash
-pip install "akeyless-agentcore-runtime[strands] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime[strands] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0"
 ```
 
 ### AgentCore `requirements.txt` example
 
 ```text
 # Akeyless runtime — cloud identity auth + secret fetch
-akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0
+akeyless-agentcore-runtime @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0
 
 # AgentCore + agent framework
 bedrock-agentcore>=0.1.0
@@ -84,7 +84,7 @@ You never need the full repository — just the pip dependency and your agent co
 To run the MCP server without cloning:
 
 ```bash
-pip install "akeyless-agentcore-runtime[mcp] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.2.0"
+pip install "akeyless-agentcore-runtime[mcp] @ git+https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime.git@v0.3.0"
 
 export AKEYLESS_ACCESS_ID=p-xxxxx
 export AKEYLESS_SECRET_PREFIX=/bedrock-agentcore/my-agent/production
@@ -113,4 +113,4 @@ pytest
 python3 -c "from akeyless_agentcore import __version__; print(__version__)"
 ```
 
-Expected output: `0.2.0`
+Expected output: `0.3.0`

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "akeyless-agentcore-runtime"
-version = "0.2.0"
+version = "0.3.0"
 description = "Fetch Akeyless secrets at runtime on AWS Bedrock AgentCore using cloud identity authentication"
 readme = "README.md"
 license = "Apache-2.0"
