@@ -6,6 +6,8 @@ Built on the [Akeyless Python SDK](https://pypi.org/project/akeyless/) with Agen
 
 **Repository:** [github.com/akeyless-community/bedrock-agentcore-akeyless-runtime](https://github.com/akeyless-community/bedrock-agentcore-akeyless-runtime)
 
+> **Need Agentic Runtime Authority (RTA/ARA)?** Secretless `query-db` / `service-execute` (credentials never enter the agent) lives in a separate package: [`akeyless-agentcore-rta`](https://github.com/akeyless-community/bedrock-agentcore-akeyless-rta). This repo only fetches secret *values*.
+
 ## Documentation
 
 | Guide | Description |
