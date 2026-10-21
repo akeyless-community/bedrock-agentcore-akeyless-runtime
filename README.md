@@ -15,7 +15,6 @@ Built on the [Akeyless Python SDK](https://pypi.org/project/akeyless/) with Agen
 | **[Installation](docs/INSTALL.md)** | **pip install — no git clone required** |
 | [Publishing to PyPI](docs/PYPI_PUBLISHING.md) | Trusted publishing setup for maintainers |
 | [Akeyless setup](docs/AKEYLESS_SETUP.md) | Auth method, RBAC, secret paths — do this first |
-| **[AgentCore deploy](docs/AGENTCORE_DEPLOY.md)** | **envVars, deploy, invoke, CloudWatch — after local test works** |
 | [Deployment patterns](docs/DEPLOYMENT.md) | In-agent fetch, hybrid, MCP server, Gateway Lambda |
 | [Examples](examples/README.md) | Runnable sample agents |
 | [Security](SECURITY.md) | Production checklist and reporting |
@@ -68,18 +67,7 @@ Requires **Python 3.10+**.
 
 Follow **[docs/AKEYLESS_SETUP.md](docs/AKEYLESS_SETUP.md)** — create an AWS IAM Auth Method, RBAC, and store secrets under `/bedrock-agentcore/<agent>/<env>/`.
 
-### 2. Test locally
-
-```bash
-cp .env.example .env   # edit with access_key auth for local test
-python3 -c "from akeyless_agentcore import get_secret; print(get_secret('OPENAI_API_KEY')[:8] + '...')"
-```
-
-### 3. Deploy to AgentCore
-
-Follow **[docs/AGENTCORE_DEPLOY.md](docs/AGENTCORE_DEPLOY.md)** — map `.env` → `envVars` in `agentcore.json`, bind IAM role in Akeyless, `agentcore deploy`, then `agentcore invoke`.
-
-### 4. Set bootstrap env vars on AgentCore
+### 2. Set bootstrap env vars on AgentCore
 
 Configure only auth + path prefix — **not** application secrets:
 
@@ -90,7 +78,7 @@ Configure only auth + path prefix — **not** application secrets:
 | `AKEYLESS_SECRET_PREFIX` | Recommended | `/bedrock-agentcore/my-agent/production` |
 | `AKEYLESS_GATEWAY_URL` | No | `https://api.akeyless.io` |
 
-### 5. Fetch a secret in your agent
+### 3. Fetch a secret in your agent
 
 ```python
 from akeyless_agentcore import get_secret
@@ -100,7 +88,7 @@ api_key = get_secret("OPENAI_API_KEY")
 
 Works in both sync scripts and `async def` AgentCore handlers — it calls the Akeyless SDK directly (blocking HTTP, cached between invocations).
 
-### 6. Deploy
+### 4. Deploy
 
 ```bash
 agentcore deploy
